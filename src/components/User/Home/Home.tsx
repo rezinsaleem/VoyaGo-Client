@@ -2,6 +2,7 @@ import CarpoolIntro from "./CarpoolIntro"
 import Footer from "./Footer"
 import HeroSection from "./HeroSection"
 import Navbar from "./Navbar"
+import OfferRide from "./OfferRide"
 
 
 
@@ -13,6 +14,7 @@ const Home = () => {
     <Navbar/>
     <HeroSection/>
     <CarpoolIntro/>
+    <OfferRide/>
     <Footer/>
     </>
   )
