@@ -5,7 +5,7 @@ interface UserAuthState {
     userId: string;
     image: string;
     email: string;
-    mobile: string;
+    phoneNumber: string;
     loggedIn: boolean;
 }
 
@@ -14,7 +14,7 @@ const initialState: UserAuthState = {
     userId: "",
     image: "",
     email: "",
-    mobile: "",
+    phoneNumber: "",
     loggedIn: false,
 }
 
@@ -27,7 +27,7 @@ export const userAuthSlice = createSlice({
             state.userId = action.payload.userId;
             state.image = action.payload.image;
             state.email = action.payload.email;
-            state.mobile = action.payload.mobile;
+            state.phoneNumber = action.payload.phoneNumber;
             state.loggedIn = action.payload.loggedIn;
         }),
         userLogout: (state => {
@@ -35,7 +35,7 @@ export const userAuthSlice = createSlice({
             state.userId = "";
             state.image = "";
             state.email = "";
-            state.mobile = "";
+            state.phoneNumber = "";
             state.loggedIn = false;
             localStorage.removeItem('userToken')
             localStorage.removeItem('refreshToken')
