@@ -7,6 +7,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../Home/Navbar';
 import { useDispatch } from 'react-redux';
 import { userLogin } from '../../../service/redux/slices/userAuthSlice';
+import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
+import {jwtDecode} from 'jwt-decode'; 
 
 
 const SignIn = () => {
@@ -51,6 +53,42 @@ const SignIn = () => {
         toast.error((error as Error).message);
       }
     };
+
+    const googleLogin = async (datas: CredentialResponse) => {
+    try {
+      const token: string | undefined = datas.credential;
+      if (token) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const decode = jwtDecode(token) as any;
+        const { data } = await axiosUser().post('/googleLoginUser', {
+          email: decode.email,
+        });
+        if (data.message === 'Success') {
+          toast.success('Login success!');
+          localStorage.setItem('userToken', data.token);
+          localStorage.setItem('refreshToken', data.refreshToken);
+          dispatch(
+            userLogin({
+              user: data.name,
+              userId: data._id,
+              image: data.image,
+              loggedIn: true,
+              email: data.email,
+              phoneNumber: data.phoneNumber
+            })
+          );
+          navigate('/');
+        } else if (data.message === 'Blocked') {
+          toast.error('Your Blocked By Admin');
+        } else {
+          toast.error('Not registered! Please Signup to  continue.');
+        }
+      }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error);
+    }
+  };
 
   return (
     <>
@@ -124,6 +162,19 @@ const SignIn = () => {
                     Sign In
                   </button>
                 </Form>
+                <div className="mt-4 flex items-center justify-center">
+                    <span className="text-gray-400">or</span>
+                  </div>
+
+                  <div className="w-full mt-3 flex items-center justify-center">
+                    <GoogleLogin
+                      ux_mode="popup"
+                      onSuccess={googleLogin}
+                      size="large"
+                      shape="pill"
+                      theme="filled_black"
+                    />
+                  </div>
                  <p className="mt-6 text-center text-gray-600">
                  Don't have an account?{' '}
                   <Link to={'/signup'} className="text-blue-600">
