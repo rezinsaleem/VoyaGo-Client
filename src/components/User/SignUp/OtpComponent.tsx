@@ -4,15 +4,9 @@ import axiosUser from "../../../service/axios/axiosUser";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { userLogin } from "../../../service/redux/slices/userAuthSlice";
+import { OtpComponentProps } from "../../../interfaces/interface";
 
-interface OtpComponentProps {
-  values: {
-    email: string;
-    username: string;
-    password: string;
-    phoneNumber: string;
-  };
-}
+
 
 const OtpComponent: React.FC<OtpComponentProps> = ({ values }) => {
   const [otp, setOtp] = useState<string[]>(new Array(4).fill(""));
@@ -109,7 +103,7 @@ const OtpComponent: React.FC<OtpComponentProps> = ({ values }) => {
           })
         );
         toast.success('User registered successfully');
-        navigate('/login');
+        navigate('/signin');
       } else if (data.message === 'UserExist') {
         toast.error('User Already Exists');
       } else if (data.message === 'OTP does not match or is not found.') {

@@ -5,14 +5,10 @@ import * as Yup from "yup";
 import axiosUser from "../../../service/axios/axiosUser";
 import { toast } from "react-toastify";
 import OtpComponent from "./OtpComponent";
+import { Link } from "react-router-dom";
+import { SignUpFormValues } from "../../../interfaces/interface";
 
-interface SignUpFormValues {
-  username: string;
-  email: string;
-  phoneNumber: string;
-  password: string;
-  confirmPassword: string;
-}
+
 
 const SignUp: React.FC = () => {
 
@@ -102,6 +98,7 @@ const SignUp: React.FC = () => {
                   onSubmit={handleSubmit}
                 >
                   {({ isSubmitting }) => (
+                    <>
                     <Form>
                       <div className="mb-4">
                         <label className="block text-gray-700 font-medium mb-1">
@@ -195,7 +192,15 @@ const SignUp: React.FC = () => {
                       >
                         Sign Up
                       </button>
+                     
                     </Form>
+                    <p className="mt-6 text-center text-gray-600">
+                   Have an account?{' '}
+                    <Link to={'/signin'} className="text-blue-600">
+                      Sign In
+                    </Link>
+                  </p>
+                  </>
                   )}
                 </Formik>
               </>

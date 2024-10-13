@@ -1,0 +1,148 @@
+
+import { Formik, Field, Form, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import axiosUser from "../../../service/axios/axiosUser";
+import { toast } from 'react-toastify';
+import { Link, useNavigate } from 'react-router-dom';
+import Navbar from '../Home/Navbar';
+import { useDispatch } from 'react-redux';
+import { userLogin } from '../../../service/redux/slices/userAuthSlice';
+
+
+const SignIn = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    password: Yup.string().required('Password is required'),
+  });
+
+  const handleSubmit = async (values: { email: string; password: string }) => {
+    try {
+        const { data } = await axiosUser().post('/loginUser', values);
+        if (data.message === 'Success') {
+          console.log(data, 'logindata');
+          localStorage.setItem('userToken', data.token);
+          localStorage.setItem('refreshToken', data.refreshToken);
+          dispatch(
+            userLogin({
+              user: data.name,
+              userId: data._id,
+              image: data.image,
+              loggedIn: true,
+              email: data.email,
+              phoneNumber: data.phoneNumber
+            })
+          );
+          toast.success('User Logged in Successfully');
+          navigate('/');
+        } else if (data.message === 'UserNotFound') {
+          toast.error('User Not Found');
+        } else if (data.message === 'passwordNotMatched') {
+          toast.error('Entered password is wrong');
+        } else if (data.message === 'blocked') {
+          toast.info('Your Account is Blocked');
+        } else {
+          toast.error('User is not Registered, Please Sign Up!');
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error((error as Error).message);
+      }
+    };
+
+  return (
+    <>
+      <Navbar />
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-100 to-gray-200">
+        {/* Heading */}
+        <h2 className="text-4xl font-bold text-gray-700 my-10 text-center">
+          Welcome Back to <span style={{ color: "rgb(129, 190, 91)" }}>Voya</span>
+          <span className="text-gray-600">Go</span>!
+        </h2>
+
+        {/* Main Container */}
+        <div className="flex w-full max-w-6xl mx-auto relative">
+          {/* Left Image Section */}
+          <div className="hidden md:block w-1/3 fixed left-0 top-2/5 h-screen items-center justify-center">
+            <img src="/signup.svg" alt="Left Image" className="w-full" />
+          </div>
+
+          {/* Center Section: Sign In */}
+          <div className="w-full md:w-1/3 bg-white mx-auto bg-opacity-30 backdrop-blur-md p-8 rounded-lg relative shadow-lg mb-4 z-20 min-h-[400px] flex flex-col justify-center">
+            <Formik
+              initialValues={{
+                email: "",
+                password: "",
+              }}
+              validationSchema={validationSchema}
+              onSubmit={handleSubmit}
+            >
+              {({ isSubmitting }) => (
+                <>
+                <Form>
+                  <div className="mb-4">
+                    <label className="block text-gray-700 font-medium mb-1">
+                      Email
+                    </label>
+                    <Field
+                      type="email"
+                      name="email"
+                      className="w-full p-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                      placeholder="Enter your email"
+                    />
+                    <ErrorMessage
+                      name="email"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-gray-700 font-medium mb-1">
+                      Password
+                    </label>
+                    <Field
+                      type="password"
+                      name="password"
+                      className="w-full p-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                      placeholder="Enter your password"
+                    />
+                    <ErrorMessage
+                      name="password"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full bg-slate-800 hover:bg-black text-white font-semibold py-2 px-4 rounded-md shadow-md mb-6"
+                    disabled={isSubmitting}
+                  >
+                    Sign In
+                  </button>
+                </Form>
+                 <p className="mt-6 text-center text-gray-600">
+                 Don't have an account?{' '}
+                  <Link to={'/signup'} className="text-blue-600">
+                    Sign Up
+                  </Link>
+                </p>
+                </>
+              )}
+            </Formik>
+          </div>
+
+          {/* Right Image Section */}
+          <div className="hidden md:block w-1/3 fixed right-0 top-2/5 h-screen items-center justify-center">
+            <img src="/signup1.svg" alt="Right Image" className="w-full" />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default SignIn;
