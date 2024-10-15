@@ -4,6 +4,7 @@ import SignUpPage from "./pages/user/SignUpPage";
 import 'react-toastify/dist/ReactToastify.css'; 
 import SignInPage from "./pages/user/SignInPage";
 import { useSelector } from "react-redux";
+import AdminLoginPage from "./pages/admin/AdminLoginPage";
 
 function App() {
   const  user  = useSelector((store:{ user: { loggedIn: boolean } })=>store.user.loggedIn);
@@ -11,10 +12,12 @@ function App() {
     <Router>
       <div>
         <Routes>
-          <Route path="/" element={<HomePage />} />
 
+          <Route path="/" element={<HomePage />} />
           <Route path="/signin" element={user ? <Navigate to={'/'}/>:<SignInPage/>} />
           <Route path="/signup" element={user ? <Navigate to={'/'}/>:<SignUpPage/>} />
+
+          <Route path='/admin' element={<AdminLoginPage/>}/>
 
         </Routes>
       </div>
