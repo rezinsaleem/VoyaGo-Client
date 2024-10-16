@@ -1,7 +1,7 @@
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Player } from "@lottiefiles/react-lottie-player"; 
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify"; 
 import { axiosAdmin } from "../../../service/axios/axiosAdmin";
@@ -117,11 +117,7 @@ const Login = () => {
                   Login
                 </button>
 
-                <p className="mt-4 text-center text-gray-600">
-                  <Link to={"/forgot-password"} className="font-medium text-gray-600">
-                    Forgot password?
-                  </Link>
-                </p>
+                
               </Form>
             )}
           </Formik>

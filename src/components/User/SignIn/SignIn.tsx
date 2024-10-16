@@ -16,10 +16,19 @@ const SignIn = () => {
   const dispatch = useDispatch();
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string().email('Invalid email').required('Email is required'),
-    password: Yup.string().required('Password is required'),
+    email: Yup.string()
+      .email('Invalid email address') // Validates if the string is a valid email format (contains @ and .)
+      .matches(
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 
+        'Email must contain "@" and "." without spaces'
+      ) // Custom regex to ensure no spaces in the email
+      .required('Email is required'),
+    password: Yup.string()
+      .min(8, 'Password must be at least 8 characters') // Validates minimum length
+      .matches(/^\S*$/, 'Password cannot contain blank spaces') // No blank spaces allowed
+      .required('Password is required'),
   });
-
+  
   const handleSubmit = async (values: { email: string; password: string }) => {
     try {
         const { data } = await axiosUser().post('/loginUser', values);

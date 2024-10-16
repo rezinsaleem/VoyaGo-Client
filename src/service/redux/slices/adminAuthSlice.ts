@@ -1,28 +1,28 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface AdminAuthState {
-    name: string;
-    loggedIn: boolean;
+interface AdminState {
+  name: string;
+  loggedIn: boolean;
 }
 
-const initialState: AdminAuthState = {
-    name: "",
-    loggedIn: false,
-}
+const initialState: AdminState = {
+  name: '',
+  loggedIn: false,
+};
 
-export const adminAuthSlice = createSlice({
-    name: "adminAuth",
-    initialState,
-    reducers: {
-       adminLogin: ((state, action: PayloadAction<AdminAuthState>) => { 
-            state.name = action.payload.name;
-            state.loggedIn = action.payload.loggedIn;
-        }),
-        adminLogout: (state => {
+const adminAuthSlice = createSlice({
+  name: 'admin',
+  initialState,
+  reducers: {
+    adminLogin: (state, action: PayloadAction<{ name: string; loggedIn: boolean }>) => {
+      state.name = action.payload.name;
+      state.loggedIn = action.payload.loggedIn;
+    },
+       adminLogout: (state) => {
             state.name = "";
             state.loggedIn = false;
-            localStorage.removeItem('adminToken')
-        })
+            localStorage.removeItem('adminToken');
+       },
     }
 })
 

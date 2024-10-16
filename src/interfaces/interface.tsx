@@ -19,3 +19,23 @@ export interface OtpComponentProps {
     phoneNumber: string;
   };
 }
+
+export interface ProfileValues {
+  id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  userImage: string;
+}
+
+
+export interface EditProfileValues {
+  name: string;
+  phoneNumber: string;
+  userImage: File | null; 
+}
+export interface ProfileUpdates {
+  name?: string;
+  phoneNumber?: string;
+  userImage?: File | null;
+}

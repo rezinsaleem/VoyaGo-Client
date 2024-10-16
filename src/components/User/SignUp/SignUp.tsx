@@ -22,16 +22,29 @@ const SignUp: React.FC = () => {
   });
 
   const validationSchema = Yup.object({
-    username: Yup.string().required("Invalid User Name"),
-    email: Yup.string().email("Invalid email address").required("Required"),
-    phoneNumber: Yup.string().required("Required"),
+    username: Yup.string()
+      .trim() // Removes leading and trailing spaces
+      .required("Username is required"),
+  
+    email: Yup.string()
+      .email("Invalid email address") // Checks for valid email format
+      .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email format, ensure it contains '@' and '.' without spaces")
+      .required("Email is required"),
+  
+    phoneNumber: Yup.string()
+      .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
+      .required("Phone number is required"),
+  
     password: Yup.string()
       .min(8, "Password must be at least 8 characters")
-      .required("Required"),
+      .matches(/^\S*$/, "Password cannot contain blank spaces")
+      .required("Password is required"),
+  
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password")], "Passwords must match")
-      .required("Required"),
+      .oneOf([Yup.ref("password")], "Passwords must match") 
+      .required("Confirm password is required"),
   });
+  
 
   const handleSubmit = async (values: SignUpFormValues) => {
     try {
