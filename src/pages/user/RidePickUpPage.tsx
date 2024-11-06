@@ -4,7 +4,11 @@ import PickUpLocation from "../../components/User/PublishRide/RideDetails/PickUp
 
 const RidePickUpPage = () => {
   return (
-    <PickUpLocation/>
+    <PickUpLocation 
+  heading="Where would you like to pick up passengers?" 
+  navigateRoute="/ride-dropoff" 
+  storageKey="pickUpLocation" 
+/>
   )
 }
 

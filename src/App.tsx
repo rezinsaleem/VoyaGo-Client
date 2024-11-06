@@ -19,6 +19,9 @@ import AdminIdApprovalPage from "./pages/admin/AdminIdApprovalPage";
 import AdminUserIdPage from "./pages/admin/AdminUserIdPage";
 import PublishRidePage from "./pages/user/PublishRidePage";
 import RidePickUpPage from "./pages/user/RidePickUpPage";
+import RideDropOffPage from "./pages/user/RideDropOffPage";
+import RideRoutePage from "./pages/user/RideRoutePage";
+import RideDatePage from "./pages/user/RideDatePage";
 
 function App() {
   // Getting user and admin login state from Redux store
@@ -40,6 +43,9 @@ function App() {
           <Route path="/profile" element={user ? <UserProfilePage /> : <Navigate to="/signin" />} />
           <Route path="/publish-ride" element={user ? <PublishRidePage /> : <Navigate to="/signin" />} />
           <Route path="/ride-pickup" element={user ? <RidePickUpPage/> : <Navigate to="/signin" />} />
+          <Route path="/ride-dropoff" element={user ? <RideDropOffPage/> : <Navigate to="/signin" />} />
+          <Route path="/ride-route" element={user ? <RideRoutePage/> : <Navigate to="/signin" />} />
+          <Route path="/ride-details" element={user ? <RideDatePage/> : <Navigate to="/signin" />} />
           </Route>
 
           {/* Admin Protected Routes */}

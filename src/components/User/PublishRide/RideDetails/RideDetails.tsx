@@ -1,14 +1,13 @@
-// import Navbar from "../../Home/Navbar"
-// import PickUpLocation from "./PickUpLocation"
+import Navbar from "../../Home/Navbar"
 
 
-// const RideDetails = () => {
-//   return (
-//     <>
-    
-//     <PickUpLocation/>
-//     </>
-//   )
-// }
+const RideDetails = () => {
+  return (
+    <>
+    <Navbar/>
+    <h2>helloooooooooooo</h2>
+    </>
+  )
+}
 
-// export default RideDetails
+export default RideDetails
