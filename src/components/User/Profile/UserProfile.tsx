@@ -7,6 +7,7 @@ import DefaultProfile from './DefaultProfile';
 import RideHistory from './RideHistory'; 
 import Navbar from '../Home/Navbar';
 import EditProfile from './EditProfile';
+import Footer from '../Home/Footer';
 
 // Icon component
 const Icon: React.FC<{ iconClass: string }> = ({ iconClass }) => (
@@ -70,6 +71,7 @@ const UserProfile: React.FC = () => {
         {/* Main Content */}
         <div className="flex-1 p-6">{renderComponent()}</div>
       </div>
+      <Footer/>
     </>
   );
 };
