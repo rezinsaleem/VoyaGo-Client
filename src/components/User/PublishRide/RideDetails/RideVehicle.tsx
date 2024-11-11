@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Navbar from '../../Home/Navbar';
 import { carMakesAndModels } from '../../../../utils/Cars';
 import {motion} from 'framer-motion';
+import { toast } from 'react-toastify';
+import axiosRide from "../../../../service/axios/axiosRide";
+import { useSelector } from 'react-redux';
+import { RideData } from '../../../../interfaces/interface';
 
 const RideVehicle = () => {
   const [inputValue, setInputValue] = useState('');
@@ -9,6 +13,27 @@ const RideVehicle = () => {
   const [carModels, setCarModels] = useState<string[]>([]);
   const [selectedMake, setSelectedMake] = useState<string>('');
   const [additionalInfo, setAdditionalInfo] = useState('');
+  const user = useSelector((store: { user: {user:string, userId: string, email:string, phoneNumber:string, image:string } }) => store.user);
+
+  const [rideData,setRideData] = useState<RideData>({
+    start_lat: null,
+    start_lng: null,
+    start_address: '',
+    end_lat: null,
+    end_lng: null,
+    end_address: '',
+    routeName: '',
+    distance: '',
+    duration: '',
+    numSeats: null,
+    rideDate: '',
+    rideTime: '',
+    pricePerSeat: 0,
+    car: '',
+    additionalInfo: '',
+    status: 'available',
+    riderId:  user ? user.userId : null,
+  })
 
   // Handle input change to filter car makes
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,11 +64,50 @@ const RideVehicle = () => {
     setSelectedMake('');
   };
 
-  const handlePublishClick = () => {
-    console.log("Ride Details:");
-    console.log("Car:", inputValue);
-    console.log("Additional Info:", additionalInfo);
-    alert("Ride published!");
+  useEffect(()=>{
+    const pickUpLocation = JSON.parse(localStorage.getItem("pickUpLocation") || '{}');
+const dropOffLocation = JSON.parse(localStorage.getItem("dropOffLocation") || '{}');
+const routeDetails = JSON.parse(localStorage.getItem("routeDetails") || '{}');
+const datePriceDetail = JSON.parse(localStorage.getItem("datePriceDetail") || '{}');
+
+
+setRideData({
+  start_lat: pickUpLocation.lat,
+  start_lng: pickUpLocation.lng,
+  start_address: routeDetails.start_address,
+  end_lat: dropOffLocation.lat,
+  end_lng: dropOffLocation.lng,
+  end_address: routeDetails.end_address,
+  routeName: routeDetails.route,
+  distance: routeDetails.distance,
+  duration: routeDetails.duration,
+  numSeats: datePriceDetail.numofseat,
+  rideDate: datePriceDetail.date,
+  rideTime: datePriceDetail.time,
+  pricePerSeat: datePriceDetail.priceperseat,
+  car: inputValue?inputValue:'',
+  additionalInfo: additionalInfo?additionalInfo:'',
+  status: 'available',
+  riderId: user?user.userId:null,
+})
+  },[additionalInfo, inputValue, user])
+
+  const handlePublishClick = async() => {
+    try {
+      const { data } = await axiosRide().post("/publishRide", { rideData  });
+      if (data.message === "Success") {
+        toast.success("Ride Published Successfully");
+        console.log("Ride Details:");
+        console.log("Car:", inputValue);
+        console.log("Additional Info:", additionalInfo);
+      } else {
+        toast.error(data.message + "hellooo");
+      }
+    } catch (error) {
+      console.error(error);  
+      toast.error((error as Error).message +'hiiii');
+    }
+  
   };
 
   return (
@@ -102,12 +166,12 @@ const RideVehicle = () => {
             value={additionalInfo}
             onChange={(e) => setAdditionalInfo(e.target.value)}
             placeholder="Anything to add about your ride? (optional)"
-            className="border border-gray-400 bg-gray-200 p-3 w-full min-h-[100px] rounded-lg shadow-sm focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            className="border border-gray-400 bg-gray-200 p-3 w-full min-h-[100px] rounded-lg shadow-sm focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 font-semibold text-gray-700"
           />
           <div className='flex justify-center mt-3'>
           <button
               className={`bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-medium py-3 px-4 w-[200px] shadow-lg rounded-full transition duration-300 ease-in-out transform hover:scale-105 mt-3 mb-10`}
-              onClick={handlePublishClick}>
+              onClick={handlePublishClick} disabled={!inputValue}>
               Publish the Ride !
             </button>
             </div>

@@ -112,7 +112,11 @@ const VerifyID = () => {
       <div className="p-3 max-w-lg mx-auto ">
         <h2 className="text-2xl text-center font-semibold mb-8">KYC Verification</h2>
         {/* Conditionally render based on isVerified status */}
-        {user.isVerified === 'pending' ? (
+        {user.isVerified === 'true' ? (
+          <div className="text-center">
+            <p className="text-lg text-gray-700">Your account is verified</p>
+          </div>
+        ) : user.isVerified === 'pending' ? (
           <div className="text-center">
             <p className="text-lg text-gray-700">Your verification is in progress...</p>
           </div>
@@ -173,7 +177,7 @@ const VerifyID = () => {
                   />
                   <ErrorMessage name="govIdType" component="div" className="text-red-500 text-sm mt-1" />
                 </div>
-
+  
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="gov-id-number">
                     Government ID Number
@@ -187,7 +191,7 @@ const VerifyID = () => {
                   />
                   <ErrorMessage name="govIdNumber" component="div" className="text-red-500 text-sm mt-1" />
                 </div>
-
+  
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="document">
                     Upload Document
@@ -205,7 +209,7 @@ const VerifyID = () => {
                   />
                   <ErrorMessage name="document" component="div" className="text-red-500 text-sm mt-1" />
                 </div>
-
+  
                 <div className="mt-6">
                   <button
                     type="submit"
@@ -221,6 +225,7 @@ const VerifyID = () => {
       </div>
     </div>
   );
+  
 };
 
 export default VerifyID;

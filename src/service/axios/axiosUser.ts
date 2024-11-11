@@ -40,7 +40,7 @@ const createAxios = (): AxiosInstance => {
                 if (!refreshToken) {
                     localStorage.clear();  
                     store.dispatch(userLogout());
-                    window.location.href = '/login';
+                    window.location.href = '/signin';
                     return Promise.reject(error);
                 }
 
@@ -68,7 +68,7 @@ const createAxios = (): AxiosInstance => {
                     console.error('Failed to refresh token:', refreshError);
                     localStorage.clear();  // Clear tokens on refresh failure
                     store.dispatch(userLogout());
-                    window.location.href = '/login';
+                    window.location.href = '/signin';
                     return Promise.reject(refreshError);
                 }
             }

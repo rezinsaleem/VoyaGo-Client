@@ -61,3 +61,23 @@ export interface SidebarProps {
   selectedOption: string;
   setSelectedOption: (option: string) => void;
 }
+
+export interface RideData {
+  start_lat: number | null;
+  start_lng: number | null;
+  start_address: string;
+  end_lat: number | null;
+  end_lng: number | null;
+  end_address: string;
+  routeName: string;
+  distance: string;
+  duration: string;
+  numSeats: number | null;
+  rideDate: string;
+  rideTime: string;
+  pricePerSeat: number;
+  car: string;
+  additionalInfo: string;
+  status: string;
+  riderId: string | null;
+}
