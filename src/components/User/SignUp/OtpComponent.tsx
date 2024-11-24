@@ -100,6 +100,7 @@ const OtpComponent: React.FC<OtpComponentProps> = ({ values }) => {
             loggedIn: true,
             image: "",
             phoneNumber: data.phoneNumber,
+            isVerified: data.isVerified
           })
         );
         toast.success('User registered successfully');

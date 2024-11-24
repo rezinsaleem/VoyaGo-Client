@@ -5,6 +5,8 @@ import axiosUser from '../../../service/axios/axiosUser';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLogin } from '../../../service/redux/slices/userAuthSlice';
 import { toast } from 'react-toastify';
+import { Player } from '@lottiefiles/react-lottie-player';
+import { UserState } from '../../../interfaces/interface';
 
 type GovIdType = 'passport' | 'aadhaar' | 'driver-license' | 'voter-id' | 'pan-card';
 
@@ -14,17 +16,6 @@ interface VerifyFormValues {
   document: File | null;
 }
 
-interface UserState {
-  user: {
-    user: string;
-    userId: string;
-    email: string;
-    phoneNumber: string;
-    isVerified?: string;
-    loggedIn: boolean;
-    image: string;
-  };
-}
 
 interface OptionType {
   value: GovIdType;
@@ -114,11 +105,27 @@ const VerifyID = () => {
         {/* Conditionally render based on isVerified status */}
         {user.isVerified === 'true' ? (
           <div className="text-center">
-            <p className="text-lg text-gray-700">Your account is verified</p>
+            <p className="text-xl text-green-700">Your account is verified</p>
+        <div className="hidden md:block w-full md:w-1/2 ml-32">
+          <Player
+            autoplay
+            loop
+            src={'/verified.json'}
+            style={{ height: '100%', width: '100%', background: 'transparent' }}
+          />
+        </div>
           </div>
         ) : user.isVerified === 'pending' ? (
           <div className="text-center">
-            <p className="text-lg text-gray-700">Your verification is in progress...</p>
+            <p className="text-xl text-yellow-700">Your verification is in progress...</p>
+            <div className="hidden md:block w-full md:w-1/2 ml-32">
+          <Player
+            autoplay
+            loop
+            src={'/pending.json'}
+            style={{ height: '100%', width: '100%', background: 'transparent' }}
+          />
+        </div>
           </div>
         ) : (
           <Formik

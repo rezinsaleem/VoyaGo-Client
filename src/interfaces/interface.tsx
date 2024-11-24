@@ -81,3 +81,15 @@ export interface RideData {
   status: string;
   riderId: string | null;
 }
+
+export interface UserState {
+  user: {
+    user: string;
+    userId: string;
+    email: string;
+    phoneNumber: string;
+    isVerified?: string;
+    loggedIn: boolean;
+    image: string;
+  };
+}

@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import axiosRide from "../../../../service/axios/axiosRide";
 import { useSelector } from 'react-redux';
 import { RideData } from '../../../../interfaces/interface';
+import { useNavigate } from 'react-router-dom';
 
 const RideVehicle = () => {
   const [inputValue, setInputValue] = useState('');
@@ -14,6 +15,8 @@ const RideVehicle = () => {
   const [selectedMake, setSelectedMake] = useState<string>('');
   const [additionalInfo, setAdditionalInfo] = useState('');
   const user = useSelector((store: { user: {user:string, userId: string, email:string, phoneNumber:string, image:string } }) => store.user);
+
+  const navigate = useNavigate()
 
   const [rideData,setRideData] = useState<RideData>({
     start_lat: null,
@@ -97,9 +100,7 @@ setRideData({
       const { data } = await axiosRide().post("/publishRide", { rideData  });
       if (data.message === "Success") {
         toast.success("Ride Published Successfully");
-        console.log("Ride Details:");
-        console.log("Car:", inputValue);
-        console.log("Additional Info:", additionalInfo);
+        navigate('/ride-complete')
       } else {
         toast.error(data.message + "hellooo");
       }

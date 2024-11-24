@@ -37,10 +37,8 @@ const UserManage = () => {
     setLoading(true);
     try {
       const { data } = await axiosAdmin().get<User[]>('/getUsers');
-      console.log(data);
       if (data) {
         setUsers(data);
-        console.log('heyyyy')
       } else {
         toast.error('No Users Found');
       }
@@ -54,7 +52,7 @@ const UserManage = () => {
   const handleBlockUnblock = async (userId: string, currentStatus: 'Blocked' | 'UnBlocked') => {
     try {
       const newStatus = currentStatus === 'UnBlocked' ? 'Blocked' : 'UnBlocked';
-      const {data} = await axiosAdmin().patch(`/users/${userId}/block-unblock`, { accountStatus: newStatus });
+      const {data} = await axiosAdmin().put(`/users/${userId}/block-unblock`, { accountStatus: newStatus });
       if(data.message === 'success') {
         toast.success(`User has been ${newStatus.toLowerCase()} successfully!`);
         fetchUserData();
@@ -62,7 +60,7 @@ const UserManage = () => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error((error as Error).message);
+      toast.error((error as Error).message+'catch');
     }
   };
 

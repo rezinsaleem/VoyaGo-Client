@@ -49,7 +49,8 @@ const SignIn = () => {
               image: data.image,
               loggedIn: true,
               email: data.email,
-              phoneNumber: data.phoneNumber
+              phoneNumber: data.phoneNumber,
+              isVerified: data.isVerified,
             })
           );
           toast.success('User Logged in Successfully');
@@ -89,7 +90,8 @@ const SignIn = () => {
               image: data.image,
               loggedIn: true,
               email: data.email,
-              phoneNumber: data.phoneNumber
+              phoneNumber: data.phoneNumber,
+              isVerified: data.isVerified,
             })
           );
           navigate('/');

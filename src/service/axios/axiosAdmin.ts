@@ -3,7 +3,12 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { store } from '../redux/store';
 import { adminLogout } from '../redux/slices/adminAuthSlice';
-import { DecodedToken } from '../../interfaces/interface';
+
+interface DecodedToken {
+  exp?: number;
+  id: string;
+  role: string;
+}
 
 // Function to check if the token has expired
 const isTokenExpired = (token: string): boolean => {
@@ -56,7 +61,6 @@ export const axiosAdmin = () => {
   // Response interceptor
   axiosInstance.interceptors.response.use(
     (response) => {
-      console.log(response);
       return response;
     },
     (error) => {

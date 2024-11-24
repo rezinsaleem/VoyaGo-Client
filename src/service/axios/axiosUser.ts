@@ -16,7 +16,7 @@ const createAxios = (): AxiosInstance => {
         (config: InternalAxiosRequestConfig) => {
             const token = localStorage.getItem('userToken');
             if (token) {
-                config.headers.set('Authorization', `Bearer ${token}`);
+                config.headers['Authorization'] = `Bearer ${token}`;
             }
             return config;
         },
@@ -24,6 +24,13 @@ const createAxios = (): AxiosInstance => {
             return Promise.reject(error);
         }
     );
+
+    // Helper function to clear auth data and redirect to sign-in
+    const clearAuthDataAndRedirect = () => {
+        localStorage.clear();
+        store.dispatch(userLogout());
+        window.location.href = '/signin';
+    };
 
     // Response Interceptor: Refresh token on 401 error, logout if refresh fails
     axiosUser.interceptors.response.use(
@@ -36,16 +43,12 @@ const createAxios = (): AxiosInstance => {
                 originalRequest._retry = true;
                 const refreshToken = localStorage.getItem('refreshToken');
 
-                // If no refresh token, clear data and log out
                 if (!refreshToken) {
-                    localStorage.clear();  
-                    store.dispatch(userLogout());
-                    window.location.href = '/signin';
+                    clearAuthDataAndRedirect();
                     return Promise.reject(error);
                 }
 
                 try {
-                    // Send request to refresh access token using refresh token
                     const { data } = await axios.post(`${import.meta.env.VITE_BASE_URL}/auth/refresh`, {
                         token: refreshToken,
                     });
@@ -66,9 +69,7 @@ const createAxios = (): AxiosInstance => {
                     return axiosUser(originalRequest);
                 } catch (refreshError) {
                     console.error('Failed to refresh token:', refreshError);
-                    localStorage.clear();  // Clear tokens on refresh failure
-                    store.dispatch(userLogout());
-                    window.location.href = '/signin';
+                    clearAuthDataAndRedirect();
                     return Promise.reject(refreshError);
                 }
             }

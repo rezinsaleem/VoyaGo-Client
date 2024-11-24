@@ -51,7 +51,7 @@ const ChangePassword :React.FC<EditProfileProps> = ({ onUpdate }) => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error((error as Error).message);
+      toast.error((error as Error).message+ " helloo");
     } finally {
       setIsSubmitting(false);
     }
