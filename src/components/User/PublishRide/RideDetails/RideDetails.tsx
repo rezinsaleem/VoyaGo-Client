@@ -122,7 +122,7 @@ const RideDetails = () => {
       <span className="text-[120px] font-bold text-blue-500 px-5">{numSeats}</span>
       <button
         onClick={incrementSeats}
-        disabled={numSeats >= 3}
+        disabled={numSeats >= 4}
         className="bg-gray-200 hover:bg-gray-300 transition-colors rounded-full p-3"
       >
         <FaPlus size={18} />

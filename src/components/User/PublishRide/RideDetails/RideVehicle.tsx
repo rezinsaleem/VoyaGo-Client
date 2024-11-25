@@ -100,13 +100,16 @@ setRideData({
       const { data } = await axiosRide().post("/publishRide", { rideData  });
       if (data.message === "Success") {
         toast.success("Ride Published Successfully");
+        await localStorage.setItem('currentRide', JSON.stringify({
+          rideId : data.rideId,
+        }));
         navigate('/ride-complete')
       } else {
-        toast.error(data.message + "hellooo");
+        toast.error(data.message);
       }
     } catch (error) {
       console.error(error);  
-      toast.error((error as Error).message +'hiiii');
+      toast.error((error as Error).message);
     }
   
   };
