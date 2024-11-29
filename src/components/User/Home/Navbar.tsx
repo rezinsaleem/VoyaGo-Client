@@ -111,8 +111,8 @@ const Navbar: React.FC = () => {
               )}
             </div>
           ) : (
-            <Link to="/signup" className="text-gray-400 hover:text-gray-900">
-              Sign Up
+            <Link to="/signin" className="text-gray-400 font-semibold hover:text-gray-900">
+              Sign In
             </Link>
           )}
         </div>

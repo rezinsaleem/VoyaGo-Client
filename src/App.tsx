@@ -26,6 +26,7 @@ import RideVehiclePage from "./pages/user/RideVehiclePage";
 import RideHomePage from "./pages/user/RideHomePage";
 import RideCompletePage from "./pages/user/RideCompletePage";
 import RidePlanPage from "./pages/user/RidePlanPage";
+import AdminRidesPage from "./pages/admin/AdminRidesPage";
 
 function App() {
   // Getting user and admin login state from Redux store
@@ -37,13 +38,13 @@ function App() {
       <div>
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={user ? <Navigate to="/ride-home" /> : <HomePage/>} />
           <Route path="/signin" element={user ? <Navigate to="/" /> : <SignInPage />} />
           <Route path="/signup" element={user ? <Navigate to="/" /> : <SignUpPage />} />
           <Route path="/forgot-password" element={user ? <Navigate to="/" /> : <UserForgotPassword />} />
 
           <Route path="" element={<UserPrivateRoute />}>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={user ? <Navigate to="/ride-home" /> : <HomePage/>} />
           <Route path="/profile" element={user ? <UserProfilePage /> : <Navigate to="/signin" />} />
           <Route path="/publish-ride" element={user ? <PublishRidePage /> : <Navigate to="/signin" />} />
           <Route path="/ride-pickup" element={user ? <RidePickUpPage/> : <Navigate to="/signin" />} />
@@ -60,6 +61,7 @@ function App() {
           <Route path="/admin" element={admin ? <Navigate to="/admin/dashboard" /> : <AdminLoginPage />} />
           <Route path="/admin/dashboard" element={admin ? <AdminHomePage /> : <Navigate to="/admin" />} />
           <Route path="/admin/user-management" element={admin ? <AdminUsersPage /> : <Navigate to={'/admin'} />}/>
+          <Route path="/admin/ride-management" element={admin ? <AdminRidesPage /> : <Navigate to={'/admin'} />}/>
           <Route path="/admin/ID-approval" element={admin ? <AdminIdApprovalPage /> : <Navigate to={'/admin'} />}/>
           <Route path="/admin/users/:id" element={ admin ? <AdminUserIdPage /> : <Navigate to={'/admin'} />}/>
         </Routes>

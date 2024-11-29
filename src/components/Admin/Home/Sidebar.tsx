@@ -8,7 +8,7 @@ const Sidebar = ({ selectedOption, setSelectedOption }: SidebarProps) => {
   const options = [
     { name: 'Dashboard', icon: 'fas fa-chart-line', path: "/admin/dashboard" },
     { name: 'User Management', icon: 'fas fa-users', path: "/admin/user-management" },
-    { name: 'Ride Management', icon: 'fas fa-tachometer-alt', path: "/admin/dashboard" },
+    { name: 'Ride Management', icon: 'fas fa-tachometer-alt', path: "/admin/ride-management" },
     { name: 'Report/Complaints', icon: 'fas fa-cogs', path: "/admin/dashboard" },
     { name: 'ID Approval', icon: 'fas fa-check-circle', path: "/admin/ID-approval" }
   ];

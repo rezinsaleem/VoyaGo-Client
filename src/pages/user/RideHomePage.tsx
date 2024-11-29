@@ -1,4 +1,4 @@
-import RideHome from "../../components/User/RideBooking/RideHome"
+import RideHome from "../../components/User/RideBooking/RideHome/RideHome"
 
 
 const RideHomePage = () => {
