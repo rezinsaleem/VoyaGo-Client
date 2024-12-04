@@ -17,7 +17,7 @@ const RideDetails = () => {
 
   useEffect(()=>{
     const routeDetails = JSON.parse(localStorage.getItem("routeDetails") || '{}');
-    const distance  = Number(routeDetails.distance.split(' ')[0]);
+    const distance = Number(routeDetails.distance.replace(/,/g, '').split(' ')[0]);
     const price  = Math.round((distance*3) / 10) * 10;
     setSeatPrice(price)
   },[])
@@ -41,7 +41,11 @@ const RideDetails = () => {
   }, []);
 
   const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date);
+    if (date) {
+      const localDateString = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString();
+      const localDate = new Date(localDateString); 
+      setSelectedDate(localDate);
+    }
     
     if (date) {
       const isToday = date.toDateString() === currentDate.toDateString();
