@@ -15,7 +15,6 @@ import usePlacesAutocomplete, {
   getLatLng,
   GeocodeResult,
 } from "use-places-autocomplete";
-import axiosRide from "../../../../service/axios/axiosRide";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -123,10 +122,7 @@ const SearchComponent: React.FC = () => {
       return;
     }
     try {
-      const response = await axiosRide().post("/search-rides", searchData);
-      const rides = response.data;
-      console.log(rides , 'ridesssss');
-      navigate("/ride-results", { state: { rides } });
+      navigate("/ride-results", { state: { searchData } });
     } catch (error) {
       console.error("Error fetching rides from backend:", error);
       toast.error("Failed to search rides. Please try again.");

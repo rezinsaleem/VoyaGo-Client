@@ -14,7 +14,7 @@ const VITE_GOOGLE_API = import.meta.env.VITE_GOOGLE_API;
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT}>
-      <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
+      <PersistGate loading={<div></div>} persistor={persistor}>
         <LoadScript googleMapsApiKey={VITE_GOOGLE_API} libraries={["places"]}>
           <App />
         </LoadScript>

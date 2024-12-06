@@ -115,3 +115,43 @@ interface Passenger {
   name: string;
   phoneNumber: number,
 }
+
+interface VerifyValues {
+  govIdType: string;
+  govIdNumber: string;
+  document: string;
+}
+export interface Ride {
+  passengers: Passenger[];
+  start_lat: number;
+  start_lng: number;
+  start_address: string;
+  end_lat: number;
+  end_lng: number;
+  end_address: string;
+  routeName: string;
+  distance: string;
+  duration: string;
+  numSeats: number;
+  rideDate: string;
+  rideTime: string;
+  pricePerSeat: number;
+  car: string;
+  additionalInfo: string;
+  status: string;
+  riderId: string;
+  startDistance: number;
+  endDistance: number;
+  riderDetails: {
+    _id: string;
+    name: string;
+    email: string;
+    phoneNumber: string;
+    userImage: string;
+    accountStatus: string;
+    isVerified: string;
+    verificationDetails: VerifyValues;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
