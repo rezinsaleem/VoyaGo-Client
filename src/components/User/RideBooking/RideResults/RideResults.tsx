@@ -9,6 +9,7 @@ import axiosRide from "../../../../service/axios/axiosRide";
 import ShimmerSidebar from "./ShimmerSidebar";
 import ShimmerRideCard from "./ShimmerRideCard";
 import Footer from "../../Home/Footer";
+import { Player } from "@lottiefiles/react-lottie-player";
 
 const RideResults = () => {
   const [rides, setRides] = useState<Ride[]>([]);
@@ -116,14 +117,26 @@ const RideResults = () => {
               .filter((ride) => new Date(ride.rideDate).toDateString() === searchDate.toDateString())
               .map((ride: Ride, index: Key | null | undefined) => <RideCard key={index} ride={ride} />)
           ) : (
+            <>
             <motion.h2
-              className="text-lg text-slate-700 mt-4"
+              className="text-xl ml-3 font-semibold text-slate-700 mt-4"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.4 }}
             >
-              No rides available for the selected date.
+             Oops! No rides available for the selected date.
             </motion.h2>
+            <div className="container mx-auto flex items-center h-[70vh] px-4">
+        <div className="hidden md:block w-full md:w-1/2">
+          <Player
+            autoplay
+            loop
+            src={'/NoRides.json'}
+            style={{ height: '100%', width: '100%', background: 'transparent' }}
+          />
+        </div>
+        </div>
+            </>
           )}
 
           {/* Rides for Later Dates */}

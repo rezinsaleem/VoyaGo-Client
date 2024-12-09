@@ -1,5 +1,6 @@
 import React from "react";
 import { Ride } from "../../../../interfaces/interface";
+import { useNavigate } from "react-router-dom";
 
 interface RideCardProps {
   ride: Ride;
@@ -9,7 +10,13 @@ const BUCKET = import.meta.env.VITE_AWS_S3_BUCKET;
 
 const RideCard: React.FC<RideCardProps> = ({ ride }) => {
 
-  // Utility to calculate end time
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate('/ride-overview', { state: { rideDetails: ride } });
+  };
+
+ 
 const calculateEndTime = (rideTime: string, duration: string) => {
   // Parse the rideTime into hours and minutes
   const [time, modifier] = rideTime.split(" "); // e.g., ["02:00", "PM"]
@@ -45,7 +52,14 @@ const endTime = calculateEndTime(ride.rideTime, ride.duration);
 
   
   return (
-    <div className="border cursor-pointer rounded-lg p-4 shadow-sm mb-4 hover:shadow-md hover:border-gray-300 transition flex flex-col bg-white">
+    <div
+  className={`border rounded-lg p-4 shadow-sm mb-4 transition flex flex-col ${
+    ride.passengers.length === ride.numSeats
+      ? "bg-gray-200 border-gray-300"
+      : "bg-white cursor-pointer hover:shadow-md hover:border-gray-300"
+  }`}
+  onClick={ ride.numSeats <=0 ? undefined : handleCardClick}
+>
     {/* Ride Info */}
     <div className="flex items-center justify-between">
       <div className="flex flex-col">
@@ -79,7 +93,7 @@ const endTime = calculateEndTime(ride.rideTime, ride.duration);
         </div>
       {/* Price Section */}
       <div className="text-right">
-        <p className="text-lg font-semibold text-gray-700">{`₹${ride.pricePerSeat}`}</p>
+        {ride.numSeats <=0 ?<p className="text-lg font-semibold text-gray-700">Full</p>:<p className="text-lg font-semibold text-gray-700">{`₹${ride.pricePerSeat}`}</p>}
       </div>
     </div>
   

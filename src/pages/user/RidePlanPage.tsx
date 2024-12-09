@@ -1,4 +1,4 @@
-import RidePlan from "../../components/User/RideBooking/RidePlan"
+import RidePlan from "../../components/User/PublishRide/RideDetails/RidePlan"
 
 const RidePlanPage = () => {
   return (

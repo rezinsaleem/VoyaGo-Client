@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
-import Navbar from "../Home/Navbar";
+import Navbar from "../../Home/Navbar";
 import Swal from "sweetalert2";
-import axiosRide from "../../../service/axios/axiosRide";
-import { RidePlanState } from "../../../interfaces/interface";
+import axiosRide from "../../../../service/axios/axiosRide";
+import { RidePlanState } from "../../../../interfaces/interface";
 import { toast } from "react-toastify";
+import RouteModal from "../../RideBooking/BookRide/RouteModal";
 
 const RidePlan = () => {
   const [selectedRide, setSelectedRide] = useState<RidePlanState | null>(null);
   const [endTimeFormat, setEndTimeFormat] = useState("");
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchRideData();
@@ -55,6 +58,15 @@ const RidePlan = () => {
     }
   };
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // Function to handle modal close
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const handleCancel = () => {
     Swal.fire({
       title: "Are you sure?",
@@ -97,7 +109,7 @@ const RidePlan = () => {
           Ride Plan
         </h1>
 
-        <hr className="border-gray-300 my-4" />
+        <hr className="rounded-lg w-full bg-gray-200 h-1 my-6" />
 
         {/* Ride Details */}
         {selectedRide && (
@@ -112,10 +124,10 @@ const RidePlan = () => {
                   })}
                 </h2>
                 <h2 className="text-xl font-bold mr-6 mt-4  text-gray-700 mb-4">
-                  {selectedRide.pricePerSeat} INR
+                 ₹ {selectedRide.pricePerSeat} 
                 </h2>
               </div>
-              <div className="space-y-6 hover:bg-gray-100 rounded-lg p-4 transition-all duration-200">
+              <div className="space-y-6 cursor-pointer hover:bg-gray-100 rounded-lg p-4 transition-all duration-200"onClick={openModal}>
                 {/* Starting Point */}
                 <div className="flex items-start">
                   <div className="flex flex-col items-center">
@@ -124,8 +136,8 @@ const RidePlan = () => {
                   </div>
                   <div className="ml-4">
                     <p className="font-bold text-lg text-gray-700">
-                      {convertTo24HourFormat(selectedRide.rideTime)}{" "}
-                      {selectedRide.start_address.split(",")[0]?.trim()}
+                      {convertTo24HourFormat(selectedRide.rideTime)}{" - "}
+                      {selectedRide.start_address.split(",").slice(-3,-2)[0]}
                     </p>
                     <p className="text-md text-gray-600">
                       {selectedRide.start_address}
@@ -140,8 +152,8 @@ const RidePlan = () => {
                   </div>
                   <div className="ml-4 -mt-9">
                     <p className="font-bold text-lg text-gray-700">
-                      {endTimeFormat}{" "}
-                      {selectedRide.end_address.split(",")[0]?.trim()}
+                      {endTimeFormat}{" - "}
+                      {selectedRide.end_address.split(",").slice(-3,-2)[0]}
                     </p>
 
                     <p className="text-md text-gray-600">
@@ -152,7 +164,7 @@ const RidePlan = () => {
               </div>
             </div>
 
-            <hr className="border-gray-300 my-6" />
+           <hr className="rounded-lg w-full bg-gray-200 h-1 my-6" />
 
             {/* Additional Ride Info */}
             <div className="space-y-4 ml-3">
@@ -182,7 +194,7 @@ const RidePlan = () => {
                 )}
             </div>
 
-            <hr className="border-gray-300 my-6" />
+            <hr className="rounded-lg w-full bg-gray-200 h-1 my-6" />
             {/* Passengers Info */}
             <p className="text-gray-600 font-semibold ml-3 mb-6">
               {selectedRide.passengers.length === 0
@@ -196,7 +208,7 @@ const RidePlan = () => {
                   ))}
             </p>
 
-            <hr className="border-gray-300 my-6" />
+            <hr className="rounded-lg w-full bg-gray-200 h-1 my-6" />
 
             {/* Actions */}
             <div className="space-y-4 text-blue-500">
@@ -215,7 +227,7 @@ const RidePlan = () => {
               )}
             </div>
 
-            <hr className="border-gray-300 my-6" />
+            <hr className="rounded-lg w-full bg-gray-200 h-1 my-6" />
 
             {/* Cancel Button */}
             <div className="mt-4 text-center">
@@ -228,6 +240,7 @@ const RidePlan = () => {
             </div>
           </>
         )}
+         {isModalOpen && <RouteModal selectedRide={selectedRide!} onClose={closeModal} />}
       </div>
     </>
   );

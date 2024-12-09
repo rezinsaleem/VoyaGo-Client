@@ -122,6 +122,7 @@ interface VerifyValues {
   document: string;
 }
 export interface Ride {
+  _id : string;
   passengers: Passenger[];
   start_lat: number;
   start_lng: number;
