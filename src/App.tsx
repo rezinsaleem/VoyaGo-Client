@@ -29,6 +29,9 @@ import RidePlanPage from "./pages/user/RidePlanPage";
 import AdminRidesPage from "./pages/admin/AdminRidesPage";
 import RideResultsPage from "./pages/user/RideResultsPage";
 import RideOverviewPage from "./pages/user/RideOverviewPage";
+import EditVehicle from "./components/User/PublishRide/RideDetails/EditVehicle";
+import EditItenary from "./components/User/PublishRide/RideDetails/EditItenary";
+import { UserInboxPage } from "./pages/user/UserInboxPage";
 
 function App() {
   // Getting user and admin login state from Redux store
@@ -60,8 +63,12 @@ function App() {
           <Route path="/ride-home" element={user ? <RideHomePage/> : <Navigate to="/signin" />} />
           <Route path="/ride-results" element={user ? <RideResultsPage/> : <Navigate to="/signin" />} />
           <Route path="/ride-overview" element={user ? <RideOverviewPage/> : <Navigate to="/signin" />} />
-          </Route>
+          <Route path="/edit-vehicle/:id" element={user ? <EditVehicle/> : <Navigate to="/signin" />} />
+          <Route path="/edit-itinerary/:rideId/:pricePerSeat/:numSeats" element={user ? <EditItenary/> : <Navigate to="/signin" />} />
 
+          <Route path="/inbox/:riderDetails?" element={user ? <UserInboxPage/> : <Navigate to="/signin" />} />
+          </Route>
+         
           {/* Admin Protected Routes */}
           <Route path="/admin" element={admin ? <Navigate to="/admin/dashboard" /> : <AdminLoginPage />} />
           <Route path="/admin/dashboard" element={admin ? <AdminHomePage /> : <Navigate to="/admin" />} />

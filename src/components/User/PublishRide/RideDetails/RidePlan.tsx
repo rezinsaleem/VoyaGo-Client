@@ -5,12 +5,16 @@ import axiosRide from "../../../../service/axios/axiosRide";
 import { RidePlanState } from "../../../../interfaces/interface";
 import { toast } from "react-toastify";
 import RouteModal from "../../RideBooking/BookRide/RouteModal";
+import { useNavigate } from "react-router-dom"; 
 
 const RidePlan = () => {
+  const navigate = useNavigate(); 
   const [selectedRide, setSelectedRide] = useState<RidePlanState | null>(null);
   const [endTimeFormat, setEndTimeFormat] = useState("");
-  
+  const [rideId, setRideId] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [cancelled, setCancelled] =useState(false)
+
 
   useEffect(() => {
     fetchRideData();
@@ -22,6 +26,7 @@ const RidePlan = () => {
         localStorage.getItem("currentRide") || "{}"
       );
       const currentRideId = currentRide.rideId;
+      setRideId(currentRideId)
       const { data } = await axiosRide().get<RidePlanState>(
         `/getRide/${currentRideId}`
       );
@@ -78,11 +83,29 @@ const RidePlan = () => {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        // Handle the cancellation (e.g., make an API call or update state)
-        Swal.fire("Cancelled!", "Your ride has been cancelled.", "success");
+        fetchUpdate();
       }
     });
   };
+  
+  const fetchUpdate = async () => {
+    try {
+      const { data } = await axiosRide().put(`/cancelRide/${rideId}`);
+      if (data.message === "success") {
+        toast.success("Ride Cancelled Successfully");
+        Swal.fire("Cancelled!", "Your ride has been cancelled.", "success");
+        setCancelled(true);
+      } else {
+        toast.error("Failed to cancel the ride. Please try again.");
+        Swal.fire("Error!", "Failed to cancel the ride. Please try again.", "error");
+      }
+    } catch (error) {
+      console.error("Error cancelling the ride:", error);
+      toast.error("An error occurred. Please try again later.");
+      Swal.fire("Error!", "An error occurred. Please try again later.", "error");
+    }
+  };
+  
 
   const convertTo24HourFormat = (time: string) => {
     const [timeStr, modifier] = time.split(" ");
@@ -113,133 +136,156 @@ const RidePlan = () => {
 
         {/* Ride Details */}
         {selectedRide && (
-          <>
-            <div className="ml-2">
-              <div className="flex justify-between">
-                <h2 className="text-xl font-bold ml-3 mt-4  text-gray-700 mb-4">
-                  {new Date(selectedRide.rideDate).toLocaleDateString("en-GB", {
-                    weekday: "short",
-                    day: "2-digit",
-                    month: "long",
-                  })}
-                </h2>
-                <h2 className="text-xl font-bold mr-6 mt-4  text-gray-700 mb-4">
-                 ₹ {selectedRide.pricePerSeat} 
-                </h2>
-              </div>
-              <div className="space-y-6 cursor-pointer hover:bg-gray-100 rounded-lg p-4 transition-all duration-200"onClick={openModal}>
-                {/* Starting Point */}
-                <div className="flex items-start">
-                  <div className="flex flex-col items-center">
-                    <span className="w-2 h-2 bg-blue-600 rounded-full mt-3"></span>
-                    <div className="w-0.5 bg-gray-400 h-[80px]"></div>
-                  </div>
-                  <div className="ml-4">
-                    <p className="font-bold text-lg text-gray-700">
-                      {convertTo24HourFormat(selectedRide.rideTime)}{" - "}
-                      {selectedRide.start_address.split(",").slice(-3,-2)[0]}
-                    </p>
-                    <p className="text-md text-gray-600">
-                      {selectedRide.start_address}
-                    </p>
-                  </div>
-                </div>
+  <>
+    <div className="ml-2">
+      {/* Ride Status */}
+      {cancelled && (
+        <div className="bg-red-100 text-red-600 font-bold text-center p-4 rounded-lg mb-6">
+          This ride has been cancelled.
+        </div>
+      )}
+      {selectedRide.status === "cancelled" && (
+        <div className="bg-red-100 text-red-600 font-bold text-center p-4 rounded-lg mb-6">
+          This ride has been cancelled.
+        </div>
+      )}
 
-                {/* Ending Point */}
-                <div className="flex items-start">
-                  <div className="flex flex-col items-center">
-                    <span className="w-2 h-2 bg-blue-500 rounded-full -mt-6"></span>
-                  </div>
-                  <div className="ml-4 -mt-9">
-                    <p className="font-bold text-lg text-gray-700">
-                      {endTimeFormat}{" - "}
-                      {selectedRide.end_address.split(",").slice(-3,-2)[0]}
-                    </p>
+      {/* Ride Details */}
+      <div className="flex justify-between">
+        <h2 className="text-xl font-bold ml-3 mt-4 text-gray-700 mb-4">
+          {new Date(selectedRide.rideDate).toLocaleDateString("en-GB", {
+            weekday: "short",
+            day: "2-digit",
+            month: "long",
+          })}
+        </h2>
+        <h2 className="text-xl font-bold mr-6 mt-4 text-gray-700 mb-4">
+          ₹ {selectedRide.pricePerSeat}
+        </h2>
+      </div>
 
-                    <p className="text-md text-gray-600">
-                      {selectedRide.end_address}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-           <hr className="rounded-lg w-full bg-gray-200 h-1 my-6" />
-
-            {/* Additional Ride Info */}
-            <div className="space-y-4 ml-3">
-              <p className="text-gray-700 text-lg">
-                <span className="font-semibold">Car: </span>
-                {selectedRide.car}
-              </p>
-              <p className="text-gray-700 text-lg">
-                <span className="font-semibold">Distance: </span>
-                {selectedRide.distance}
-              </p>
-              <p className="text-gray-700 text-lg">
-                <span className="font-semibold">Duration: </span>
-                {selectedRide.duration}
-              </p>
-              <p className="text-gray-700 text-lg">
-                <span className="font-semibold">Seats Available: </span>
-                {selectedRide.numSeats}
-              </p>
-              {/* Conditionally render Additional Info only if it's available */}
-              {selectedRide.additionalInfo &&
-                selectedRide.additionalInfo.trim() !== "" && (
-                  <p className="text-gray-700 text-lg">
-                    <span className="font-semibold">Additional Info: </span>
-                    {selectedRide.additionalInfo}
-                  </p>
-                )}
-            </div>
-
-            <hr className="rounded-lg w-full bg-gray-200 h-1 my-6" />
-            {/* Passengers Info */}
-            <p className="text-gray-600 font-semibold ml-3 mb-6">
-              {selectedRide.passengers.length === 0
-                ? (<span className="text-yellow-800">No passengers booked for this ride!</span>)
-                : selectedRide.passengers.map((passenger) => (
-                    <div key={passenger.id}>
-                      <p className="text-gray-600">
-                        {passenger.name} - {passenger.phoneNumber}
-                      </p>
-                    </div>
-                  ))}
+      <div
+        className={`space-y-6 cursor-pointer hover:bg-gray-100 rounded-lg p-4 transition-all duration-200 ${
+          selectedRide.status === "cancelled" ? "cursor-not-allowed" : ""
+        }`}
+        onClick={selectedRide.status !== "cancelled" ? openModal : undefined}
+      >
+        {/* Starting Point */}
+        <div className="flex items-start">
+          <div className="flex flex-col items-center">
+            <span className="w-2 h-2 bg-blue-600 rounded-full mt-3"></span>
+            <div className="w-0.5 bg-gray-400 h-[80px]"></div>
+          </div>
+          <div className="ml-4">
+            <p className="font-bold text-lg text-gray-700">
+              {convertTo24HourFormat(selectedRide.rideTime)}{" - "}
+              {selectedRide.start_address.split(",").slice(-3, -2)[0]}
             </p>
+            <p className="text-md text-gray-600">{selectedRide.start_address}</p>
+          </div>
+        </div>
 
-            <hr className="rounded-lg w-full bg-gray-200 h-1 my-6" />
+        {/* Ending Point */}
+        <div className="flex items-start">
+          <div className="flex flex-col items-center">
+            <span className="w-2 h-2 bg-blue-500 rounded-full -mt-6"></span>
+          </div>
+          <div className="ml-4 -mt-9">
+            <p className="font-bold text-lg text-gray-700">
+              {endTimeFormat}{" - "}
+              {selectedRide.end_address.split(",").slice(-3, -2)[0]}
+            </p>
+            <p className="text-md text-gray-600">{selectedRide.end_address}</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-            {/* Actions */}
-            <div className="space-y-4 text-blue-500">
-              <p className="text-gray-600 font-semibold ml-3">
-                You can only edit your publication until no one has booked.
+    <hr className="rounded-lg w-full bg-gray-200 h-1 my-6" />
+
+    {/* Additional Ride Info */}
+    {selectedRide.status !== "cancelled" && (
+      <>
+        <div className="space-y-4 ml-3">
+          <p className="text-gray-700 text-lg">
+            <span className="font-semibold">Car: </span>
+            {selectedRide.car}
+          </p>
+          <p className="text-gray-700 text-lg">
+            <span className="font-semibold">Distance: </span>
+            {selectedRide.distance}
+          </p>
+          <p className="text-gray-700 text-lg">
+            <span className="font-semibold">Duration: </span>
+            {selectedRide.duration}
+          </p>
+          <p className="text-gray-700 text-lg">
+            <span className="font-semibold">Seats Available: </span>
+            {selectedRide.numSeats}
+          </p>
+          {selectedRide.additionalInfo &&
+            selectedRide.additionalInfo.trim() !== "" && (
+              <p className="text-gray-700 text-lg">
+                <span className="font-semibold">Additional Info: </span>
+                {selectedRide.additionalInfo}
               </p>
-              {selectedRide.passengers.length === 0 && (
-                <>
-                  <button className="flex items-center font-medium text-lg justify-between w-full text-left hover:bg-gray-100 rounded-lg p-3 transition-all duration-200">
-                    Edit your Itinerary Plans <span>›</span>
-                  </button>
-                  <button className="flex items-center font-medium text-lg justify-between w-full text-left hover:bg-gray-100 rounded-lg p-3 transition-all duration-200">
-                    Edit Vehicle or Add Additional Info <span>›</span>
-                  </button>
-                </>
-              )}
-            </div>
+            )}
+        </div>
 
-            <hr className="rounded-lg w-full bg-gray-200 h-1 my-6" />
+        <hr className="rounded-lg w-full bg-gray-200 h-1 my-6" />
+        {/* Passengers Info */}
+        <p className="text-gray-600 font-semibold ml-3 mb-6">
+          {selectedRide.passengers.length === 0 ? (
+            <span className="text-yellow-800">
+              No passengers booked for this ride!
+            </span>
+          ) : (
+            selectedRide.passengers.map((passenger) => (
+              <div key={passenger.id}>
+                <p className="text-gray-600">
+                  {passenger.name} - {passenger.phoneNumber}
+                </p>
+              </div>
+            ))
+          )}
+        </p>
 
-            {/* Cancel Button */}
-            <div className="mt-4 text-center">
-              <button
-                className=" py-3 font-semibold text-lg text-blue-400 hover:text-blue-600 transition-all duration-200"
-                onClick={handleCancel}
-              >
-                Cancel this Ride!
-              </button>
-            </div>
+        <hr className="rounded-lg w-full bg-gray-200 h-1 my-6" />
+
+        {/* Actions */}
+        {selectedRide.passengers.length === 0 && (
+          <>
+            <button
+            className="flex items-center font-medium text-lg justify-between w-full text-left hover:bg-gray-100 rounded-lg p-3 transition-all duration-200"
+            onClick={() => navigate(`/edit-itinerary/${rideId}/${selectedRide.pricePerSeat}/${selectedRide.numSeats}`)} // Navigate to the edit itinerary page
+          >
+            Edit your Itinerary Plans <span>›</span>
+          </button>
+          <button
+            className="flex items-center font-medium text-lg justify-between w-full text-left hover:bg-gray-100 rounded-lg p-3 transition-all duration-200"
+            onClick={() => navigate(`/edit-vehicle/${rideId}`)} // Navigate to the edit vehicle page
+          >
+            Edit Vehicle or Add Additional Info <span>›</span>
+          </button>
           </>
         )}
+
+        <hr className="rounded-lg w-full bg-gray-200 h-1 my-6" />
+
+        {/* Cancel Button */}
+        <div className="mt-4 text-center">
+          <button
+            className="py-3 font-semibold text-lg text-blue-400 hover:text-blue-600 transition-all duration-200"
+            onClick={handleCancel}
+          >
+            Cancel this Ride!
+          </button>
+        </div>
+      </>
+    )}
+  </>
+)}
+
          {isModalOpen && <RouteModal selectedRide={selectedRide!} onClose={closeModal} />}
       </div>
     </>

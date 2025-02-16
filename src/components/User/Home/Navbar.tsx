@@ -43,7 +43,7 @@ const Navbar: React.FC = () => {
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <img
-            src="VOYAGO.png"
+            src="/VOYAGO.png"
             alt="Company Logo"
             className="h-8 w-8 mr-2 ml-5"
           />
@@ -93,17 +93,24 @@ const Navbar: React.FC = () => {
                 <div className="absolute -right-9 w-52 backdrop-blur-lg bg-white/80 shadow-md p-4  top-[56px] border border-gray-300 rounded-sm z-50">
                   <Link
                     to="/profile"
-                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-200"
                     onClick={() => setDropdownOpen(false)}
                   >
                     Profile
+                  </Link>
+                  <Link
+                    to="/inbox"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-200"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    Inbox
                   </Link>
                   <button
                     onClick={() => {
                       handleLogout();
                       setDropdownOpen(false);
                     }}
-                    className="w-full text-left block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    className="w-full text-left block px-4 py-2 text-gray-700 hover:bg-gray-200"
                   >
                     Logout
                   </button>

@@ -58,7 +58,7 @@ const endTime = calculateEndTime(ride.rideTime, ride.duration);
       ? "bg-gray-200 border-gray-300"
       : "bg-white cursor-pointer hover:shadow-md hover:border-gray-300"
   }`}
-  onClick={ ride.numSeats <=0 ? undefined : handleCardClick}
+  onClick={ ride.passengers.length === ride.numSeats ? undefined : handleCardClick}
 >
     {/* Ride Info */}
     <div className="flex items-center justify-between">
@@ -93,7 +93,7 @@ const endTime = calculateEndTime(ride.rideTime, ride.duration);
         </div>
       {/* Price Section */}
       <div className="text-right">
-        {ride.numSeats <=0 ?<p className="text-lg font-semibold text-gray-700">Full</p>:<p className="text-lg font-semibold text-gray-700">{`₹${ride.pricePerSeat}`}</p>}
+        {ride.passengers.length === ride.numSeats ?<p className="text-lg font-semibold text-gray-700">Full</p>:<p className="text-lg font-semibold text-gray-700">{`₹${ride.pricePerSeat}`}</p>}
       </div>
     </div>
   

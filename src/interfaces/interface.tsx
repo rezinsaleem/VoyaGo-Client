@@ -156,3 +156,31 @@ export interface Ride {
     updatedAt: string;
   };
 }
+
+  
+  export interface Rides{
+    _id: string;
+    start_address: string;
+    end_address: string;
+    numSeats: number;
+    rideDate: string;
+    rideTime: string;
+    pricePerSeat: number;
+    riderId : string;
+    passengers: Passenger[];
+  }
+  
+  export interface User {
+    id: string;
+    name: string;
+    avatar: string;
+    lastMessage: string;
+  }
+  
+  export interface Message {
+    id: string;
+    senderId: string; 
+    text: string;
+    timestamp: string;
+  }  
+

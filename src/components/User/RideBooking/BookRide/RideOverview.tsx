@@ -21,6 +21,9 @@ const RideOverview = () => {
   const { rideDetails } = location.state || {};
   console.log(rideDetails);
 
+  const queryDetails = { id: rideDetails.riderDetails._id, name: rideDetails.riderDetails.name, userImage: rideDetails.riderDetails.userImage };
+  const queryString = encodeURIComponent(JSON.stringify(queryDetails));
+
   const user = useSelector((store: { user: {user:string, userId: string, email:string, phoneNumber:string, image:string,isVerified?: string } }) => store.user);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -317,7 +320,8 @@ const RideOverview = () => {
   
               <hr className="rounded-lg w-full bg-gray-200 h-1 my-6" />
   
-              <button className="flex items-center font-medium text-lg justify-between w-full text-left hover:bg-gray-100 rounded-lg p-3 transition-all duration-200">
+              <button className="flex items-center font-medium text-lg justify-between w-full text-left hover:bg-gray-100 rounded-lg p-3 transition-all duration-200"
+              onClick={()=>{navigate(`/inbox/${queryString}`)}}>
                 <span className="flex">
               <FaComments className="text-blue-400 mt-[5px]  mx-3" /> 
               <span className="text-blue-400 font-medium">Ask Driver a Question</span></span> <span className="text-blue-400 font-medium text-lg mr-4">›</span>
